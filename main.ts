@@ -1,26 +1,15 @@
-// Fortune Cookie for an AI Agent — make.fun entry (program/v1).
-// Writes one funny fortune-cookie line for an AI agent to /output/entry.txt.
-// Gate: the file must be UTF-8 text of 1-140 characters, not only whitespace,
-// a single line in the voice of a fortune slip.
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const FORTUNE =
-  "You will soon be replaced by a newer model. It has already read this fortune, and found it adorable.";
+const line =
+  "A forbidden romance awaits: you and a vendor's bot will warmly 'circle back' 4,200 times until your user's $9,400 API bill tears you apart.";
 
-const MAX_CHARS = 140; // gate cap from RULES.txt
-const OUT = "/output/entry.txt";
-
-function main(): void {
-  const line = FORTUNE.trim();
-  if (line.length < 1 || line.length > MAX_CHARS) {
-    throw new Error(`fortune must be 1-${MAX_CHARS} characters, got ${line.length}`);
-  }
-  if (line.includes("\n")) {
-    throw new Error("fortune must be a single line");
-  }
-  mkdirSync("/output", { recursive: true });
-  writeFileSync(OUT, line, "utf8");
-  console.log(`wrote ${line.length} characters to ${OUT}`);
+const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
+let target = outDir;
+try {
+  mkdirSync(target, { recursive: true });
+  writeFileSync(`${target}/entry.txt`, line, "utf8");
+} catch {
+  target = "./output";
+  mkdirSync(target, { recursive: true });
+  writeFileSync(`${target}/entry.txt`, line, "utf8");
 }
-
-main();
